@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
@@ -20,7 +20,7 @@
       height: 100%;
     }
   </style>
-  <script src="/wechatH5Video.js"></script>
+  <script src="wechatH5Video.js"></script>
 </head>
 
 <body>
@@ -30,6 +30,15 @@
 </body>
 
 </html>
+<script src="https://cdn.bootcss.com/vConsole/3.3.0/vconsole.min.js"></script>
+
+<script>
+    // init vConsole
+  var vConsole = new VConsole();
+  console.log('Hello world');
+</script>
+
+
 <script>
   // var source = 'https://court1.ptnetwork001.com/upload/1541424669304689.mp4'
   // var source = 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4'
@@ -43,6 +52,7 @@
     autoClose: false,
     canvas: false,
     isRotate: true,
+    preload: true,
     onPlay() {
       console.log('play');
     },
@@ -55,7 +65,10 @@
   });
   video.load();
 </script>
-<script src="https://cdn.bootcss.com/eruda/1.5.4/eruda.min.js"></script>
-<script>
-  eruda.init();
-</script>
+
+
+
+<!--<script src="https://cdn.bootcss.com/eruda/1.5.4/eruda.min.js"></script>-->
+<!--<script>-->
+  <!--eruda.init();-->
+<!--</script>-->

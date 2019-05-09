@@ -65,7 +65,7 @@
   opacity: .4;
 }
 
-.stopBtn {
+.pauseBtn {
   display: none;
   position: absolute;
   left: -100%;

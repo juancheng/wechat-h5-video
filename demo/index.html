@@ -17,7 +17,7 @@
     #videoWrapper {
       position: relative;
       width: 100%;
-      height: 100%;
+      height: 240px;
     }
   </style>
   <script src="wechatH5Video.js"></script>
@@ -48,11 +48,12 @@
     mask: true,
     poster: 'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1541401188&di=41264a717eb6a592709efc04a66e216d&src=http://i8.download.fd.pchome.net/t_600x1024/g1/M00/07/04/oYYBAFMioPmIClVuAALr2NPIYaIAABZ9QKPJJUAAuvw540.jpg',
     playBtn: true,
-    jumpBtn: true,
+    jumpBtn: false,
     autoClose: false,
-    canvas: false,
+    canvas: true,
     isRotate: true,
     preload: true,
+    fill: true,
     onPlay() {
       console.log('play');
     },

@@ -97,15 +97,30 @@ export default class wechatH5Video {
     `
     this.container.appendChild(this.wrapper);
 
-    if (this.options.mask) {
-      this._initMask();
-    }
+    // if (this.options.mask) {
+    //   this._initMask();
+    //   this._initPauseBtn(); // 初始化暂停按钮
+    //   this._initControls(); // 初始化控制播放器
+    // }
+    this._initMask();
     if (this.options.poster) {
       this._initPoster();
     }
     if (this.options.playBtn) {
       this._initPlayBtn();
     }
+
+    this._initPauseBtn(); // 初始化暂停按钮
+    this._initControls(); // 初始化控制播放器
+    // 起始播放时间
+    this._initSpreadCurrentTime();
+    // 播放时间线
+    this._initTimeLine();
+    // 播放总时长
+    this._initTotalTime();
+    // 全屏播放按钮
+    this._initFullScreenBtn();
+
     if (this.options.jumpBtn) {
       this._initeJumpBtn();
     }
@@ -157,8 +172,6 @@ export default class wechatH5Video {
     this.mask = document.createElement('div');
     this.mask.classList.add(style.mask);
     this.container.appendChild(this.mask);
-    this._initPauseBtn(); // 初始化暂停按钮
-    this._initControls(); // 初始化控制播放器
   }
 
   _initPoster() {
@@ -171,11 +184,7 @@ export default class wechatH5Video {
   _initPlayBtn() {
     this.playBtn = document.createElement('div');
     this.playBtn.classList.add(style.playBtn);
-    this.playBtn.innerHTML = `
-      <svg viewBox="0 0 64 64">
-        <path d="M26,45.5L44,32L26,18.6v27V45.5L26,45.5z M32,2C15.4,2,2,15.5,2,32c0,16.6,13.4,30,30,30c16.6,0,30-13.4,30-30 C62,15.4,48.5,2,32,2L32,2z M32,56c-9.7,0-18.5-5.9-22.2-14.8C6.1,32.2,8.1,21.9,15,15c6.9-6.9,17.2-8.9,26.2-5.2 C50.1,13.5,56,22.3,56,32C56,45.3,45.2,56,32,56L32,56z" />
-      </svg>
-    `
+    this.playBtn.innerHTML = `<svg fill="#ffffff" viewBox="0 0 1024 1024" width="48" height="48"><defs><style type="text/css"></style></defs><path d="M516.30080001 38.81884445c-262.3488 0-475.7504 213.4016-475.7504 475.7504s213.4016 475.7504 475.7504 475.75039999 475.7504-213.4016 475.7504-475.75039999-213.4016-475.7504-475.7504-475.7504z m0 883.23413333c-224.6656 0-407.48373333-182.81813333-407.48373335-407.48373333s182.81813333-407.48373333 407.48373335-407.48373334 407.48373333 182.81813333 407.48373333 407.48373334-182.81813333 407.48373333-407.48373333 407.48373333z" p-id="936"></path><path d="M406.56213334 672.62933333c0 37.54666667 26.624 52.90666667 59.11893333 34.13333333l234.22293332-135.23626667c32.5632-18.77333333 32.5632-49.49333333 0-68.26666666L465.68106667 367.9552c-32.5632-18.77333333-59.11893333-3.41333333-59.11893333 34.13333333v270.5408z" p-id="937"></path></svg>`
     this.container.appendChild(this.playBtn);
   }
 
@@ -183,11 +192,7 @@ export default class wechatH5Video {
   _initPauseBtn() {
     this.pauseBtn = document.createElement('div');
     this.pauseBtn.classList.add(style.pauseBtn);
-    this.pauseBtn.innerHTML = `
-      <svg viewBox="0 0 64 64">
-        <path d="M26,45.5L44,32L26,18.6v27V45.5L26,45.5z M32,2C15.4,2,2,15.5,2,32c0,16.6,13.4,30,30,30c16.6,0,30-13.4,30-30 C62,15.4,48.5,2,32,2L32,2z M32,56c-9.7,0-18.5-5.9-22.2-14.8C6.1,32.2,8.1,21.9,15,15c6.9-6.9,17.2-8.9,26.2-5.2 C50.1,13.5,56,22.3,56,32C56,45.3,45.2,56,32,56L32,56z" />
-      </svg>
-    `
+    this.pauseBtn.innerHTML = `<svg fill="#ffffff" viewBox="0 0 1024 1024" width="48" height="48"><defs><style type="text/css"></style></defs><path d="M512 1003.2C243.2 1003.2 22.4 784 22.4 513.6 22.4 244.8 243.2 25.6 512 25.6s489.6 219.2 489.6 489.6C1001.6 784 780.8 1003.2 512 1003.2z m0-913.6C278.4 89.6 86.4 280 86.4 513.6s192 425.6 425.6 425.6 425.6-190.4 425.6-425.6S745.6 89.6 512 89.6z" p-id="1299"></path><path d="M425.6 692.8c-17.6 0-32-14.4-32-32V377.6c0-17.6 14.4-32 32-32s32 14.4 32 32v283.2c0 17.6-14.4 32-32 32zM598.4 692.8c-17.6 0-32-14.4-32-32V377.6c0-17.6 14.4-32 32-32s32 14.4 32 32v283.2c0 17.6-14.4 32-32 32z" p-id="1300"></path></svg>`
     this.mask.appendChild(this.pauseBtn);
   }
 
@@ -218,7 +223,7 @@ export default class wechatH5Video {
   _initSpreadCurrentTime() {
     this.currentTime = document.createElement('span');
     this.currentTime.classList.add(style.currentTime);
-    this.currentTime.innerHTML = this._timeFormat(this.video.currentTime);
+    this.currentTime.innerHTML = '00:00'
     this.controls.appendChild(this.currentTime);
   }
   // 最新当前播放时间
@@ -230,8 +235,12 @@ export default class wechatH5Video {
   _initTotalTime() {
     this.totalTime = document.createElement('span');
     this.totalTime.classList.add(style.totalTime);
-    this.totalTime.innerHTML = this._timeFormat(this.video.duration);
+    this.totalTime.innerHTML = '00:00';
     this.controls.appendChild(this.totalTime);
+  }
+  // 更新播放总时长
+  _updateTotalTime() {
+    this.totalTime.innerHTML = this._timeFormat(this.video.duration);
   }
 
   // 初始化播放进度条
@@ -245,10 +254,33 @@ export default class wechatH5Video {
     this.timeLineCursor = document.createElement('div');
     this.timeLineCursor.classList.add(style.timeLineCursor);
     this.timeLineCursor.style.left = '0px'
+
     this.timeLineSlide.appendChild(this.timeLineBuffer);
     this.timeLineSlide.appendChild(this.timeLineLoaded);
     this.timeLineSlide.appendChild(this.timeLineCursor);
     this.controls.appendChild(this.timeLineSlide);
+   
+  }
+
+  _initFullScreenBtn() {
+     // 添加全屏播放按钮
+     this.startFullScreenBtn = document.createElement('div');
+     this.startFullScreenBtn.classList.add(style.startFullScreenBtn);
+     this.startFullScreenBtn.innerHTML = `<svg fill="#ffffff" viewBox="0 0 1024 1024" width="48" height="48"><defs><style type="text/css"></style></defs><path d="M135.39555555 336.21333333V135.62311111h200.704c16.27022222 0 29.46844445-13.19822222 29.46844445-29.46844444v-35.38488889c0-16.27022222-13.19822222-29.46844445-29.46844445-29.46844445H63.71555555c-12.51555555 0-22.75555555 10.24-22.75555555 22.75555556v272.384c0 16.27022222 13.19822222 29.46844445 29.46844445 29.46844444H105.81333333c16.384-0.11377778 29.58222222-13.312 29.58222222-29.696zM690.176 135.62311111H890.88v200.704c0 16.27022222 13.19822222 29.46844445 29.46844445 29.46844444H955.73333333c16.27022222 0 29.46844445-13.19822222 29.46844445-29.46844444V63.94311111c0-12.51555555-10.24-22.75555555-22.75555556-22.75555556H690.176c-16.27022222 0-29.46844445 13.19822222-29.46844445 29.46844445v35.38488889c0 16.27022222 13.19822222 29.58222222 29.46844445 29.58222222zM336.09955555 891.10755555H135.39555555V690.40355555c0-16.27022222-13.19822222-29.46844445-29.46844444-29.46844444H70.54222222c-16.27022222 0-29.46844445 13.19822222-29.46844444 29.46844444v272.384c0 12.51555555 10.24 22.75555555 22.75555555 22.75555556h272.384c16.27022222 0 29.46844445-13.19822222 29.46844445-29.46844444v-35.38488889c-0.11377778-16.384-13.312-29.58222222-29.58222223-29.58222223zM890.88 690.40355555v200.704H690.176c-16.27022222 0-29.46844445 13.19822222-29.46844445 29.46844445v35.38488889c0 16.27022222 13.19822222 29.46844445 29.46844445 29.46844444H962.56c12.51555555 0 22.75555555-10.24 22.75555555-22.75555555V690.40355555c0-16.27022222-13.19822222-29.46844445-29.46844444-29.46844444H920.46222222c-16.384 0-29.58222222 13.19822222-29.58222222 29.46844444z" p-id="836"></path></svg>`
+     this.controls.appendChild(this.startFullScreenBtn);
+  }
+
+
+  _showFullScreenBtn() {
+    if (this.startFullScreenBtn) {
+      this.startFullScreenBtn.style.display = 'block';
+    }
+  }
+
+  _hiddenFullScreenBtn() {
+    if (this.startFullScreenBtn) {
+      this.startFullScreenBtn.style.display = 'none';
+    }
   }
 
   // 更新播放进度条
@@ -304,6 +336,7 @@ export default class wechatH5Video {
     this._hiddenControls();
     let self = this;
     self.video.isPlayed = false;
+    this.mask.style.background = 'rgba(0,0,0,0)';
     self.video.addEventListener('timeupdate', function () {
       // 当视频currentTime大于0.1时候表示已有视频画面
       self._updateSpreadCurrentTime(); // 更新播放时间
@@ -323,8 +356,9 @@ export default class wechatH5Video {
   };
 
   pause() {
+    // 更改 mask的样式
+    this.mask.style.background = 'rgba(0,0,0,0.3)'
     this.video.pause();
-    console.warn('pause()')
     this._showPlayBtn();
     this._hideJumpBtn();
     this._hiddenControls();
@@ -350,6 +384,12 @@ export default class wechatH5Video {
   _hiddenSpreadTotalTime() {
     if (this.spreadTotalTime) {
       this.spreadTotalTime.style.display = 'none';
+    }
+  }
+
+  _showSpreadTotalTime() {
+    if (this.spreadTotalTime) {
+      this.spreadTotalTime.style.display = 'block';
     }
   }
 
@@ -403,12 +443,15 @@ export default class wechatH5Video {
   // 展示控制器
   _showControls() {
     this.controls.style.bottom = '0px';
+    // 更改 mask的样式
+    this.mask.style.background = 'rgba(0,0,0,0.3)'
     this._showPauseBtn();
     // 展示暂停按钮
     this.controlsTimer && clearTimeout(this.controlsTimer);
     this.controlsTimer = setTimeout(() => { // 倒计时关闭控制器
       this.controls.style.bottom = '-45px';
       this._hiddenPauseBtn(); // 隐藏暂停按钮
+      this.mask.style.background = 'rgba(0,0,0,0)'
     }, 3000)
   }
 
@@ -422,18 +465,21 @@ export default class wechatH5Video {
   _addEvent() {
     const that = this;
     if (this.options.playBtn) {
-      this.playBtn.addEventListener('click', () => {
+      this.playBtn.addEventListener('click', (e) => {
+        e && e.stopPropagation && e.stopPropagation();
         this.play();
       }, false);
     }
     if(this.pauseBtn) {
-      this.pauseBtn.addEventListener('click', () => {
+      this.pauseBtn.addEventListener('click', (e) => {
+        e && e.stopPropagation && e.stopPropagation();
         this.pause();
       }, false);
     }
   
     if (this.options.mask) {
-      this.mask.addEventListener('click', () => {
+      this.mask.addEventListener('click', (e) => {
+        e && e.stopPropagation && e.stopPropagation();
         !this.video.paused && this._showControls();// 显示播放控制器 和 暂停 按钮 3s后自动消失
       }, false)
     }
@@ -452,11 +498,48 @@ export default class wechatH5Video {
       }, false)
     }
 
+    if (this.startFullScreenBtn) {
+      this.startFullScreenBtn.addEventListener('click', (e) => {
+        console.warn('点击全屏播放')
+        console.warn('window.screen.height')
+        e && e.stopPropagation && e.stopPropagation();
+        if (that.fullScreenSpread) {
+          that.container.style.height = that._css(that.context, 'height') + 'px';
+          that.fullScreenSpread = false;
+        } else {
+          that.container.style.height = window.screen.height + 'px';
+          that.fullScreenSpread = true;
+        }
+
+        // 重新计算 播放视频的大小
+        // if (this.options.canvas) {
+        //   this._videoToCavas();
+        // }
+        if (!this.options.fill) {
+          this._handleResize();
+        } else {
+          this._fillResize();
+        }
+      })
+    }
+
     this.video.addEventListener('ended', () => {
-      this.options.onEnd();
-      console.warn('end')
+      this.options.onEnd(); // 监听视频播放 结束
+
+      if (that.fullScreenSpread) { // 全屏播放状态下， 退出全屏
+        that.container.style.height = that._css(that.context, 'height') + 'px';
+        that.fullScreenSpread = false;
+        if (!this.options.fill) {
+          this._handleResize();
+        } else {
+          this._fillResize();
+        }
+      }
+      
       this._showPlayBtn();
       this._resetTimeLine();
+      // 更新视频的总时间
+      this._showSpreadTotalTime();
       
       if (this.options.autoClose) {
         this._remove();
@@ -493,16 +576,11 @@ export default class wechatH5Video {
 
     this.video.addEventListener('loadedmetadata', () => {
       // 初始化页面视频播放总时长
-      this._initSpreadTotalTime(this._timeFormat(this.video.duration))
+      this._initSpreadTotalTime(this._timeFormat(this.video.duration));
+      this._updateTotalTime(); // 更新播放总时长
     })
     this.video.addEventListener('loadeddata', () => {
       console.warn('loadeddata')
-      // 起始播放时间
-      this._initSpreadCurrentTime();
-      // 播放时间线
-      this._initTimeLine();
-      // 播放总时长
-      this._initTotalTime();
     })
 
     this.video.addEventListener('canplay', () => {
@@ -526,8 +604,10 @@ export default class wechatH5Video {
     //   //TODO 未侦听到该事件  未生效
     //   console.warn('退出全屏暂停视频')
     // }, false);
+
+
     
-    this.video.addEventListener('pause', function(e) {
+    this.video.addEventListener('pause', function(e) { // should listen visibility webkitvisibility
       // handle ios browser no support inline spread question; or spread will auto fullscreen question;
       // at auto fullscreen, click pause button or exit fullscreen will show play button.
       that.pause();

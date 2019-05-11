@@ -34,6 +34,7 @@ export default class wechatH5Video {
       fill: true,
       orientation: 'portrait',
       isRotate: true,
+      fullScreenRate: 1, // 1: 采用默认高度; 2: 采用宽高等比例计算高度; 3：采用全屏比例播放
       onPlay() { },
       onPause() { },
       onEnd() { }
@@ -501,23 +502,45 @@ export default class wechatH5Video {
     if (this.startFullScreenBtn) {
       this.startFullScreenBtn.addEventListener('click', (e) => {
         console.warn('点击全屏播放')
-        console.warn('window.screen.height')
         e && e.stopPropagation && e.stopPropagation();
-        if (that.fullScreenSpread) { // 进入全屏状态
-
+        if (that.fullScreenSpread) { // 退出全屏状态
+          that.container.style.wdith = that._css(that.context, 'wdith') + 'px';
           that.container.style.height = that._css(that.context, 'height') + 'px';
+          that.container.style.position = 'absolute';
           that.fullScreenSpread = false;
-        } else { // 退出全屏状态
+          if (that.options.fullScreenRate === 2) { // 宽高比计算
+            that.wrapper.style.width = that._css(that.context, 'wdith') + 'px';
+            that.wrapper.style.height = that._css(that.context, 'height') + 'px';
+          } else if (that.options.fullScreenRate === 3) { // 全屏铺满
+            that.wrapper.style.width = that._css(that.context, 'wdith') + 'px';
+            that.wrapper.style.height = that._css(that.context, 'height') + 'px';
+          } else { // 1: 默认高度
+            // 校验视频的高度是否大于屏幕的高度
+            that.wrapper.style.width = that._css(that.context, 'wdith') + 'px';
+            that.wrapper.style.height = that._css(that.context, 'height') + 'px';
+          }
+        } else { // 进入全屏状态
+          that.container.style.width = window.screen.width + 'px';
           that.container.style.height = window.screen.height + 'px';
+          that.container.style.position = 'fixed';
           that.fullScreenSpread = true;
+          if (that.options.fullScreenRate === 2) { // 宽高比计算
+            // 计算视频全屏播放的宽高比例
+            let realVideoHight = Math.round((window.screen.width/that.videoWidth) * that.videoHeight);
+            if(realVideoHight > window.screen.height) realVideoHight = window.screen.height;
+            that.wrapper.style.width = window.screen.width + 'px';
+            that.wrapper.style.height = realVideoHight + 'px';
+          } else if (that.options.fullScreenRate === 3) { // 全屏铺满
+            that.wrapper.style.width = window.screen.width + 'px';
+            that.wrapper.style.height = window.screen.height + 'px';
+          } else { // 1: 默认高度    
+            // 校验视频的高度是否大于屏幕的高度
+            if (that._css(that.wrapper, 'height') > window.screen.height) {
+              that.wrapper.style.width = window.screen.width + 'px';
+              that.wrapper.style.height = window.screen.height + 'px';
+            }
+          }
         }
-
-        // 重新计算 播放视频的大小
-        // if (!this.options.fill) {
-        //   this._handleResize();
-        // } else {
-        //   this._fillResize();
-        // }
       })
     }
 
@@ -574,12 +597,12 @@ export default class wechatH5Video {
 
     this.video.addEventListener('loadedmetadata', () => {
       that.videoWidth = that.video.videoWidth;
-      that.videoHight = that.video.videoHeight;
+      that.videoHeight = that.video.videoHeight;
       // 未指定视频区域的高度，重新调整视频的高度
       if (that._css(that.context, 'height') < 20) {
         // 计算视频的高度
-        const videoHight = Math.round((that.video.videoHeight/that.video.videoWidth) * that.context.clientWidth);
-        that.context.style.height = videoHight + 'px';
+        const videoHeight = Math.round((that.video.videoHeight/that.video.videoWidth) * that.context.clientWidth);
+        that.context.style.height = videoHeight + 'px';
         // 重新计算 播放视频的大小
         if (!this.options.fill) {
           this._handleResize();
@@ -588,8 +611,6 @@ export default class wechatH5Video {
         }
       }
 
-      
-      
       // 初始化页面视频播放总时长
       this._initSpreadTotalTime(this._timeFormat(this.video.duration));
       this._updateTotalTime(); // 更新播放总时长

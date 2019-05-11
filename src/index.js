@@ -19,6 +19,7 @@ import style from './index.css';
  * @param {functtion} onPlay 播放开始回调
  * @param {functtion} onPause 播放暂停回调
  * @param {functtion} onEnd 播放结束
+ * @param {number} fullScreenRate 全屏播放状态下 视频的画面比例 1: 采用默认高度(指定高度); 2: 采用宽高等比例计算高度; 3：采用全屏比例播放
  */
 export default class wechatH5Video {
   constructor(source, options) {
@@ -121,6 +122,8 @@ export default class wechatH5Video {
     this._initTotalTime();
     // 全屏播放按钮
     this._initFullScreenBtn();
+    // 退出全屏播放按钮
+    this._initExitFullScreenBtn();
 
     if (this.options.jumpBtn) {
       this._initeJumpBtn();
@@ -269,6 +272,13 @@ export default class wechatH5Video {
      this.startFullScreenBtn.classList.add(style.startFullScreenBtn);
      this.startFullScreenBtn.innerHTML = `<svg fill="#ffffff" viewBox="0 0 1024 1024" width="48" height="48"><defs><style type="text/css"></style></defs><path d="M135.39555555 336.21333333V135.62311111h200.704c16.27022222 0 29.46844445-13.19822222 29.46844445-29.46844444v-35.38488889c0-16.27022222-13.19822222-29.46844445-29.46844445-29.46844445H63.71555555c-12.51555555 0-22.75555555 10.24-22.75555555 22.75555556v272.384c0 16.27022222 13.19822222 29.46844445 29.46844445 29.46844444H105.81333333c16.384-0.11377778 29.58222222-13.312 29.58222222-29.696zM690.176 135.62311111H890.88v200.704c0 16.27022222 13.19822222 29.46844445 29.46844445 29.46844444H955.73333333c16.27022222 0 29.46844445-13.19822222 29.46844445-29.46844444V63.94311111c0-12.51555555-10.24-22.75555555-22.75555556-22.75555556H690.176c-16.27022222 0-29.46844445 13.19822222-29.46844445 29.46844445v35.38488889c0 16.27022222 13.19822222 29.58222222 29.46844445 29.58222222zM336.09955555 891.10755555H135.39555555V690.40355555c0-16.27022222-13.19822222-29.46844445-29.46844444-29.46844444H70.54222222c-16.27022222 0-29.46844445 13.19822222-29.46844444 29.46844444v272.384c0 12.51555555 10.24 22.75555555 22.75555555 22.75555556h272.384c16.27022222 0 29.46844445-13.19822222 29.46844445-29.46844444v-35.38488889c-0.11377778-16.384-13.312-29.58222222-29.58222223-29.58222223zM890.88 690.40355555v200.704H690.176c-16.27022222 0-29.46844445 13.19822222-29.46844445 29.46844445v35.38488889c0 16.27022222 13.19822222 29.46844445 29.46844445 29.46844444H962.56c12.51555555 0 22.75555555-10.24 22.75555555-22.75555555V690.40355555c0-16.27022222-13.19822222-29.46844445-29.46844444-29.46844444H920.46222222c-16.384 0-29.58222222 13.19822222-29.58222222 29.46844444z" p-id="836"></path></svg>`
      this.controls.appendChild(this.startFullScreenBtn);
+  }
+
+  _initExitFullScreenBtn() {
+      // this.exitFullScreenBtn = document.createElement('div');
+      // this.exitFullScreenBtn.classList.add(style.exitFullScreenBtn);
+      // this.exitFullScreenBtn.innerHTML = `<svg t="1557555708053" width="48" height="48"><defs><style type="text/css"></style></defs><path d="M229.8 163l55.7-55.7c6-6 2.4-16.2-6-17.2l-203.2-24c-6.5-0.8-12 4.7-11.3 11.3l24 203.2c1 8.4 11.3 11.9 17.2 6l55.4-55.4 169.6 169.4c3.9 3.9 10.4 3.9 14.3 0l53.8-53.6c3.9-3.9 3.9-10.4 0-14.3L229.8 163z m447.3 237.6c3.9 3.9 10.4 3.9 14.3 0L861 231.1l55.4 55.4c6 6 16.2 2.4 17.2-6l24-203c0.8-6.5-4.7-12-11.3-11.3l-203.2 24c-8.4 1-11.9 11.3-6 17.2l55.7 55.7-169.5 169.4c-3.9 3.9-3.9 10.4 0 14.3l53.8 53.8z m256.6 343.9c-1-8.4-11.3-11.9-17.2-6L861 794 691.4 624.5c-3.9-3.9-10.4-3.9-14.3 0l-53.8 53.6c-3.9 3.9-3.9 10.4 0 14.3L792.9 862l-55.7 55.7c-6 6-2.4 16.2 6 17.2l203.2 24c6.5 0.8 12-4.7 11.3-11.3l-24-203.1z m-588.1-120c-3.9-3.9-10.4-3.9-14.3 0L161.7 794l-55.4-55.4c-6-6-16.2-2.4-17.2 6l-24 203c-0.8 6.5 4.7 12.1 11.3 11.3l203.2-24c8.4-1 11.9-11.3 6-17.2l-55.7-55.5 169.6-169.4c3.9-3.9 3.9-10.4 0-14.3l-53.9-54z m0 0" fill="#ffffff" p-id="813"></path></svg>`
+      // this.controls.appendChild(this.exitFullScreenBtn);
   }
 
 
@@ -504,6 +514,8 @@ export default class wechatH5Video {
         console.warn('点击全屏播放')
         e && e.stopPropagation && e.stopPropagation();
         if (that.fullScreenSpread) { // 退出全屏状态
+          // that.exitFullScreenBtn.style.display = 'block';
+          // that.startFullScreenBtn.style.display = 'none';
           that.container.style.wdith = that._css(that.context, 'wdith') + 'px';
           that.container.style.height = that._css(that.context, 'height') + 'px';
           that.container.style.position = 'absolute';
@@ -520,6 +532,8 @@ export default class wechatH5Video {
             that.wrapper.style.height = that._css(that.context, 'height') + 'px';
           }
         } else { // 进入全屏状态
+          // that.exitFullScreenBtn.style.display = 'none';
+          // that.startFullScreenBtn.style.display = 'block';
           that.container.style.width = window.screen.width + 'px';
           that.container.style.height = window.screen.height + 'px';
           that.container.style.position = 'fixed';

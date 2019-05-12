@@ -43,16 +43,20 @@
   // var source = 'https://court1.ptnetwork001.com/upload/1541424669304689.mp4'
   // var source = 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4'
   var source = 'https://www.haorooms.com/uploads/invitePage/media/move.mp4';
+  // var source = 'http://v9-tt.ixigua.com/5f71fa4ad69a265f8961674728636e5a/5cd7fec4/video/m/2200dc6f71355dc496fad9746154e0e7f861161fe96a00008dd5cd6d039c/?rc=M3M6M2o5czVybTMzOzczM0ApQHRAbzgzNTs8MzUzMzgzNDQzNDVvQGg1dilAZzN3KUBmM3UpZHNyZ3lrdXJneXJseHdmOjVAbzM2b3MtaWY2Xy0tXy0vc3MtbyNvIy8tMS0wMC0uMzM1LzI2LTojbyM6YS1vIzpgLXAjOmB2aVxiZitgXmJmK15xbDojLi5e';
   var video = new wechatH5Video(source, {
     context: 'videoWrapper',
     mask: true,
+    preload: false,
+    initTotalTime: true,
+    controls: true,
     poster: 'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1541401188&di=41264a717eb6a592709efc04a66e216d&src=http://i8.download.fd.pchome.net/t_600x1024/g1/M00/07/04/oYYBAFMioPmIClVuAALr2NPIYaIAABZ9QKPJJUAAuvw540.jpg',
-    playBtn: true,
+    pauseBtn: true,
+    fullScreenBtn: true,
     jumpBtn: false,
     autoClose: false,
-    canvas: false,
+    canvas: true,
     isRotate: true,
-    preload: false,
     fill: true,
     onPlay() {
       console.log('play');

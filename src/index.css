@@ -169,14 +169,13 @@
   z-index: 114;
 }
 
-.startFullScreenBtn, .exitFullScreenBtn {
-  display: none;
+.fullScreenBtn {
   width: 20px;
   height: 20px;
   padding-left: 15px;
 }
 
-.startFullScreenBtn svg, .exitFullScreenBtn svg {
+.fullScreenBtn svg {
   width: 20px;
   height: 20px;
 }
